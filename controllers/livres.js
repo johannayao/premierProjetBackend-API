@@ -6,18 +6,18 @@ class LivreController{
         try {
             console.log(req.auth);
             const isUser = await Users.findOne({_id: req.auth._id,email: req.auth.email});
-            if(!isUser) return res.status(203).json({message:"email ou mot de passe incorrecte"})
+            if(!isUser) return res.status(203).json({message:"email ou mot de passe incorrecte", status: false})
             const isLivre = await Livre.findOne({titre: req.body.titre,auteur: req.body.auteur});
-            if(isLivre)return res.status(203).json({message :"ce livres est dejà ajouté"});
+            if(isLivre)return res.status(203).json({message :"ce livres est dejà ajouté", status: false});
             if(req.file){
-                req.body.fichier = req.protocol+"://"+req.get("host")+"/"+req.file.path;
+                req.body.image = req.protocol+"://"+req.get("host")+"/"+req.file.path;
             }
             const newLivre = await Livre.create(req.body);
             console.log(newLivre);
-            res.status(201).json({message:"livre ajouté avec succès", data: newLivre});
+            res.status(201).json({message:"livre ajouté avec succès", data: newLivre, status: true});
         } catch (error) {
             console.log(error);
-            res.status(500).json({message:"une erreur s'est produite lors de l'enregistrement", error: error.message})
+            res.status(500).json({message:"une erreur s'est produite lors de l'enregistrement", error: error.message,status: false})
         }
     }
 

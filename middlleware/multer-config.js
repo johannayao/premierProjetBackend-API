@@ -16,5 +16,5 @@ const storage = multer.diskStorage({
     callback(null, name + Date.now() + '.' + extension);
   }
 });
-const telecharger = multer({storage: storage}).single('fichier');
+const telecharger = multer({storage: storage}).single('image');
 module.exports = telecharger;

@@ -1,7 +1,7 @@
 const Jwb = require("jsonwebtoken");
  const veriFyToken = (req,res,next)=>{
     try {
-        const tokenDecode = Jwb.verify(req.body.token.authorization.split(" ")[0],'RANDOM_TOKEN_SECRET');
+        const tokenDecode = Jwb.verify(req.headers.authorization.split(" ")[1],'RANDOM_TOKEN_SECRET');
         req.auth= {
             _id: tokenDecode._id,email:tokenDecode.email
         };
