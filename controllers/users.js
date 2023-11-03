@@ -6,27 +6,45 @@ const Jwt = require("jsonwebtoken");
 
 
 
-  exports.signup =  (req, res) => {
-    console.log(req.body);
-    try {
-      if(req.body.password !== req.body.passwordC)return res.status(203).json({message :'mot de pass pas conform'});
-      Users.findOne({email:req.body.email})
-      .then(user=>{
-        if(user)return res.status(203).json({message:'utilisateurs exist'})
-        bcrypt.hash(req.body.password,10)
+//   exports.signup =  (req, res) => {
+//     console.log(req.body);
+//     try {
+//       if(req.body.password !== req.body.passwordC)return res.status(203).json({message :'mot de pass pas conform'});
+//       Users.findOne({email:req.body.email})
+//       .then(user=>{
+//         if(user)return res.status(203).json({message:'utilisateurs exist'})
+//         bcrypt.hash(req.body.password,10)
       
-       .then(hash=>{
-        req.body.password = hash;
-        //on enregistre l'utilisateurs
-        Users.create(req.body)
-        .then(newUser=>res.status(202).json({message :'utilisateurs créé avec succès', newUser}))
-       })
-      })
-    } catch(error) {
-      res.status(500).json({message:'not found'})
-    }
-};
+//        .then(hash=>{
+//         req.body.password = hash;
+//         //on enregistre l'utilisateurs
+//         Users.create(req.body)
+//         .then(newUser=>res.status(202).json({message :'utilisateurs créé avec succès', newUser}))
+//        })
+//       })
+//     } catch(error) {
+//       res.status(500).json({message:'not found'})
+//     }
+// };
 
+
+exports.signup = (req,res)=>{
+  try {
+    if(req.body.password !== req.body.cpassword)return res.status(401).json({message:"le mot e pass n'est pas conforme"})
+    Users.findOne({email: req.body.email})
+    .then((user)=>{
+      if(user)return res.sataus(300).json({message:'utilisateurs exist dejà'})
+      bcrypt.hash(req.body.password,10)
+    })
+    .then((hash)=>{
+      req.body.password = hash
+      Users.create(req.body)
+      .then((newUser)=> res.status(400).json({message:'utilisateur créé avec succès'}))
+    })
+  } catch (error) {
+    res.status(500).json({message: 'not foiund'})
+  }
+}
 
 
 
